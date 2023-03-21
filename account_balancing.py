@@ -26,6 +26,10 @@ def test_one_to_many_debt():
     s = Solution()
     assert s.minTransfers([[0,1,2],[1,2,1],[1,3,1]]) == 2
 
+def test_disconnected_pairs():
+    s = Solution()
+    assert s.minTransfers([[2,0,5],[3,4,4]]) == 2
+
 pytest.main()
 
 class Solution:
@@ -42,8 +46,10 @@ class Solution:
             else:
                 balances[debtee] += amount
 
-        transactoin_count = len([bal for bal in balances.values() if bal != 0]) - 1
-        return transactoin_count if transactoin_count >= 0 else 0
+        debits = [bal for bal in balances.values() if bal < 0]
+        credits = [bal for bal in balances.values() if bal > 0]
+
+        return max(len(credits), len(debits))
 
     def minTransfersBalance(self, transactions: List[List[int]]) -> int:
         #attempt to perfectly balance all accounts (all have zero)
