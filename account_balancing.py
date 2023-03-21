@@ -30,6 +30,10 @@ def test_disconnected_pairs():
     s = Solution()
     assert s.minTransfers([[2,0,5],[3,4,4]]) == 2
 
+def test_disconnected_asymmetric():
+    s = Solution()
+    assert s.minTransfers([[0,1,5],[2,3,1],[2,0,1],[4,0,2]]) == 4
+
 pytest.main()
 
 class Solution:
@@ -49,7 +53,21 @@ class Solution:
         debits = [bal for bal in balances.values() if bal < 0]
         credits = [bal for bal in balances.values() if bal > 0]
 
-        return max(len(credits), len(debits))
+        total = 0
+        count = 0
+        cred_idx = 0
+        for debt in debits:
+            if total == 0:
+                total = debt
+            else:
+                total += debt
+                count += 1
+            while total < 0:
+                total += credits[cred_idx]
+                count += 1
+                cred_idx += 1
+
+        return count
 
     def minTransfersBalance(self, transactions: List[List[int]]) -> int:
         #attempt to perfectly balance all accounts (all have zero)
