@@ -17,10 +17,30 @@ def test_multi_user():
     s = Solution()
     assert s.minTransfers([[0,1,10],[2,0,5]]) == 2
 
+def test_exclude_positive_balance():
+    s = Solution()
+    assert s.minTransfers([[0,1,10],[1,0,1],[1,2,5],[2,0,5]]) == 1
+
 pytest.main()
 
 class Solution:
     def minTransfers(self, transactions: List[List[int]]) -> int:
+        balances = {}
+        for debter, debtee, amount in transactions:
+            if debter not in balances:
+                balances[debter] = amount * -1
+            else:
+                balances[debter] -= amount
+            
+            if debtee not in balances:
+                balances[debtee] = amount
+            else:
+                balances[debtee] += amount
+        
+        return len([bal for bal in balances.values() if bal < 0])
+
+    def minTransfersBalance(self, transactions: List[List[int]]) -> int:
+        #attempt to perfectly balance all accounts (all have zero)
         def _hash_ids(id1, id2):
             if id1 < id2:
                 return f"{id1}x{id2}y", 1
