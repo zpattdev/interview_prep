@@ -13,6 +13,10 @@ def test_equal_trade():
     s = Solution()
     assert s.minTransfers([[0, 1, 10], [1, 0, 10]]) == 0
 
+def test_multi_user():
+    s = Solution()
+    assert s.minTransfers([[0,1,10],[2,0,5]]) == 2
+
 pytest.main()
 
 class Solution:
@@ -33,5 +37,5 @@ class Solution:
                 debts[hash_id] += amount * flip
             else:
                 debts[hash_id] = amount * flip
-
-        return len([debt for debt in debts.values() if debt > 0])
+        #breakpoint()
+        return len([debt for debt in debts.values() if debt != 0])
