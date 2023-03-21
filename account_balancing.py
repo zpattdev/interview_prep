@@ -1,4 +1,5 @@
 import pytest
+import math
 from typing import List
 
 def test_base_case():
@@ -21,6 +22,10 @@ def test_exclude_positive_balance():
     s = Solution()
     assert s.minTransfers([[0,1,10],[1,0,1],[1,2,5],[2,0,5]]) == 1
 
+def test_one_to_many_debt():
+    s = Solution()
+    assert s.minTransfers([[0,1,2],[1,2,1],[1,3,1]]) == 2
+
 pytest.main()
 
 class Solution:
@@ -36,8 +41,9 @@ class Solution:
                 balances[debtee] = amount
             else:
                 balances[debtee] += amount
-        
-        return len([bal for bal in balances.values() if bal < 0])
+
+        transactoin_count = len([bal for bal in balances.values() if bal != 0]) - 1
+        return transactoin_count if transactoin_count >= 0 else 0
 
     def minTransfersBalance(self, transactions: List[List[int]]) -> int:
         #attempt to perfectly balance all accounts (all have zero)
